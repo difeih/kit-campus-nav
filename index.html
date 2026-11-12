@@ -1,101 +1,209 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>KIT Campus Navigator / KIT 楼号查找器</title>
-<meta name="description" content="Quickly find any KIT building by number (e.g. 10.81, 50.20) and navigate with Google Maps. Supports all 800+ campus locations.">
+<meta name="description" content="Quickly locate any KIT building by its number (e.g. 10.81, 50.20) or hall name, with one-tap Google and Apple Maps navigation.">
 <meta property="og:title" content="KIT Campus Navigator">
-<meta property="og:description" content="Find any KIT building by number and open Google Maps navigation instantly.">
+<meta property="og:description" content="Find any KIT building by number and navigate instantly.">
 <meta property="og:type" content="website">
 <style>
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;margin:0;padding:16px;background:#f4f6f4;color:#1a1a1a;min-height:100vh}
-.top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:4px}
-h1{font-size:20px;margin:4px 0;line-height:1.2}
-.lang{display:flex;gap:6px;flex-shrink:0}
-.lang button{padding:7px 11px;border-radius:999px;border:1.5px solid #00876c;background:#fff;color:#00695c;font-size:13px;cursor:pointer;font-weight:500;transition:background 0.15s,color 0.15s}
-.lang button.on{background:#00876c;color:#fff}
-.lang button:hover:not(.on){background:#e6f4f0}
-p.sub{color:#555;margin:0 0 12px;font-size:14px;line-height:1.6}
-.status{font-size:13px;color:#555;background:#eef6f3;border:1px solid #bfe0d6;border-radius:8px;padding:8px 10px;margin:0 0 12px;line-height:1.5}
-.status.offline{background:#fffbe6;border-color:#e6d98a;color:#7a6600}
-.search-wrap{position:relative;margin-bottom:4px}
-input[type=search]{width:100%;padding:13px 44px 13px 14px;font-size:17px;border:2px solid #00876c;border-radius:10px;outline:none;background:#fff;transition:border-color 0.15s;-webkit-appearance:none;appearance:none}
-input[type=search]:focus{border-color:#005f4e;box-shadow:0 0 0 3px rgba(0,135,108,0.15)}
-input[type=search]::-webkit-search-cancel-button{display:none}
-.clear-btn{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#999;font-size:18px;line-height:1;padding:4px;display:none}
-.clear-btn.visible{display:block}
-.clear-btn:hover{color:#333}
-.filters{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
-.fbtn{border:1.5px solid #ccc;background:#fff;border-radius:999px;padding:7px 12px;font-size:13px;cursor:pointer;font-weight:500;transition:all 0.15s}
-.fbtn.on{border-color:#00876c;background:#00876c;color:#fff}
-.fbtn:hover:not(.on){border-color:#00876c;color:#00695c}
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 8px}
-.chip{border:1.5px solid #00876c;background:#fff;color:#00695c;border-radius:999px;padding:7px 11px;font-size:14px;cursor:pointer;font-weight:500;transition:all 0.15s;line-height:1.3}
-.chip:hover{background:#e6f4f0}
-.chip small{color:#666;font-weight:400}
-.count{font-size:13px;color:#777;margin:4px 0 2px}
-.card{background:#fff;border:1px solid #e0e0e0;border-radius:12px;padding:13px 14px;margin:10px 0;box-shadow:0 1px 3px rgba(0,0,0,0.05)}
-.card h3{margin:0 0 4px;font-size:16px;line-height:1.3}
-.meta{color:#555;font-size:13px;line-height:1.6}
-.meta .coords{font-family:monospace;font-size:12px;color:#888;margin-top:2px}
-.btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-a.btn{display:inline-block;padding:9px 12px;border-radius:8px;text-decoration:none;font-size:14px;font-weight:600;transition:opacity 0.15s}
-a.btn:hover{opacity:0.85}
-a.g{background:#00876c;color:#fff}
-a.g2{background:#34a853;color:#fff}
-a.k{background:#e6f2ef;color:#00584a}
-a.o{background:#f0f0f0;color:#333}
-a.ap{background:#1c1c1e;color:#fff}
-button.copybtn{padding:9px 12px;border-radius:8px;border:1.5px solid #ccc;background:#fff;font-size:14px;cursor:pointer;font-weight:500;transition:all 0.15s;color:#333}
-button.copybtn:hover{border-color:#00876c;color:#00695c}
-button.copybtn.ok{background:#e6f4f0;border-color:#00876c;color:#00584a}
-.note{font-size:13px;color:#555;line-height:1.6;background:#fffbe6;border:1px solid #e6d98a;border-radius:10px;padding:10px 12px;margin-top:14px}
-footer{font-size:12px;color:#888;line-height:1.6;margin-top:16px;padding-top:12px;border-top:1px solid #e0e0e0}
+:root{
+  --kit-blue:#1e50a2;
+  --kit-blue-hover:#153d80;
+  --kit-blue-light:#eaf1fb;
+  --kit-blue-border:#99bcf0;
+  --bg-page:#f4f7fb;
+  --bg-card:#ffffff;
+  --text-main:#1c2530;
+  --text-sub:#52637a;
+  --border-light:#d8e2ee;
+  --apple-btn:#1c1c1e;
+  --nav-btn:#1e50a2;
+  --map-btn:#0d6efd;
+}
+
 @media(prefers-color-scheme:dark){
-  body{background:#121212;color:#e8e8e8}
-  .card{background:#1e1e1e;border-color:#333}
-  input[type=search]{background:#1e1e1e;color:#e8e8e8;border-color:#00876c}
-  .fbtn,.lang button,.chip{background:#1e1e1e;color:#88d4bd}
-  .fbtn.on,.lang button.on,.chip:hover{background:#00876c;color:#fff}
-  a.k{background:#1a3530;color:#88d4bd}
-  a.o{background:#2a2a2a;color:#ccc}
-  button.copybtn{background:#1e1e1e;color:#ccc;border-color:#444}
-  .meta,.meta .coords{color:#aaa}
-  .status{background:#1a3530;border-color:#2a5e4e;color:#aaa}
-  .status.offline{background:#2a2500;border-color:#5a4a00;color:#ccc}
-  .note{background:#2a2500;border-color:#5a4a00;color:#ccc}
-  footer{border-color:#333;color:#666}
+  :root{
+    --kit-blue:#3b7be3;
+    --kit-blue-hover:#2d69cc;
+    --kit-blue-light:#15243b;
+    --kit-blue-border:#2b4b7a;
+    --bg-page:#0f151f;
+    --bg-card:#18202d;
+    --text-main:#e6edf5;
+    --text-sub:#8ea1b8;
+    --border-light:#253245;
+    --apple-btn:#282b30;
+    --nav-btn:#2a69d4;
+    --map-btn:#1a5dc4;
+  }
+}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;
+  margin:0;padding:16px;
+  background:var(--bg-page);
+  color:var(--text-main);
+  min-height:100vh;
+}
+
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:6px}
+h1{font-size:21px;margin:0;font-weight:700;letter-spacing:-0.3px;color:var(--text-main)}
+.lang{display:flex;gap:6px;flex-shrink:0}
+.lang button{
+  padding:6px 12px;border-radius:20px;
+  border:1.5px solid var(--kit-blue);
+  background:var(--bg-card);
+  color:var(--kit-blue);
+  font-size:13px;cursor:pointer;font-weight:600;
+  transition:all 0.15s ease;
+}
+.lang button.on{background:var(--kit-blue);color:#fff}
+.lang button:hover:not(.on){background:var(--kit-blue-light)}
+
+p.sub{color:var(--text-sub);margin:0 0 12px;font-size:13.5px;line-height:1.55}
+
+.status{
+  font-size:12.5px;color:var(--text-sub);
+  background:var(--kit-blue-light);
+  border:1px solid var(--kit-blue-border);
+  border-radius:9px;padding:7px 11px;
+  margin-bottom:12px;line-height:1.45;
+}
+.status.offline{background:#2a2310;border-color:#5c4c15;color:#f0cf65}
+
+.search-wrap{position:relative;margin-bottom:10px}
+input[type=search]{
+  width:100%;padding:13px 44px 13px 14px;
+  font-size:16.5px;
+  border:2px solid var(--kit-blue);
+  border-radius:12px;outline:none;
+  background:var(--bg-card);color:var(--text-main);
+  transition:border-color 0.15s, box-shadow 0.15s;
+  -webkit-appearance:none;appearance:none;
+}
+input[type=search]:focus{
+  border-color:var(--kit-blue-hover);
+  box-shadow:0 0 0 3px rgba(30,80,162,0.18);
+}
+input[type=search]::-webkit-search-cancel-button{display:none}
+.clear-btn{
+  position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  background:none;border:none;cursor:pointer;
+  color:var(--text-sub);font-size:18px;line-height:1;
+  padding:6px;display:none;
+}
+.clear-btn.visible{display:block}
+
+.filters{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:10px}
+.fbtn{
+  border:1.5px solid var(--border-light);
+  background:var(--bg-card);color:var(--text-sub);
+  border-radius:20px;padding:6px 13px;
+  font-size:13px;cursor:pointer;font-weight:500;
+  transition:all 0.15s;
+}
+.fbtn.on{border-color:var(--kit-blue);background:var(--kit-blue);color:#fff}
+.fbtn:hover:not(.on){border-color:var(--kit-blue);color:var(--kit-blue)}
+
+/* Quick tags: hidden immediately when search box has text */
+.chips-section{margin-bottom:8px;transition:opacity 0.2s}
+.chips-section.hidden{display:none}
+.chips-title{font-size:12px;color:var(--text-sub);margin:0 0 6px 2px;font-weight:500}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{
+  border:1px solid var(--kit-blue-border);
+  background:var(--bg-card);color:var(--kit-blue);
+  border-radius:18px;padding:6px 12px;
+  font-size:13px;cursor:pointer;font-weight:500;
+  transition:all 0.15s;display:inline-flex;align-items:center;gap:5px;
+}
+.chip:hover{background:var(--kit-blue-light)}
+.chip small{color:var(--text-sub);font-weight:400}
+
+.count{font-size:12.5px;color:var(--text-sub);margin:8px 0 4px 2px}
+
+.card{
+  background:var(--bg-card);
+  border:1px solid var(--border-light);
+  border-radius:12px;padding:13px 14px;margin:8px 0;
+  box-shadow:0 1px 4px rgba(0,0,0,0.04);
+}
+.card h3{margin:0 0 4px;font-size:16px;line-height:1.3;font-weight:600}
+.meta{color:var(--text-sub);font-size:13px;line-height:1.55}
+.meta .coords{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px;opacity:0.75;margin-top:2px}
+
+.btns{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+a.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:8px 12px;border-radius:8px;text-decoration:none;
+  font-size:13.5px;font-weight:600;transition:opacity 0.15s;
+}
+a.btn:hover{opacity:0.88}
+a.g{background:var(--nav-btn);color:#fff}
+a.g2{background:var(--map-btn);color:#fff}
+a.ap{background:var(--apple-btn);color:#fff}
+a.k{background:var(--kit-blue-light);color:var(--kit-blue)}
+a.o{background:rgba(128,128,128,0.12);color:var(--text-main)}
+
+button.copybtn{
+  padding:8px 11px;border-radius:8px;
+  border:1px solid var(--border-light);
+  background:var(--bg-card);color:var(--text-sub);
+  font-size:13px;cursor:pointer;font-weight:500;
+  transition:all 0.15s;
+}
+button.copybtn:hover{border-color:var(--kit-blue);color:var(--kit-blue)}
+button.copybtn.ok{background:var(--kit-blue-light);border-color:var(--kit-blue);color:var(--kit-blue)}
+
+.note{
+  font-size:12.5px;color:var(--text-sub);line-height:1.55;
+  background:var(--kit-blue-light);
+  border:1px solid var(--kit-blue-border);
+  border-radius:10px;padding:10px 12px;margin-top:16px;
+}
+footer{
+  font-size:11.5px;color:var(--text-sub);line-height:1.55;
+  margin-top:16px;padding-top:12px;border-top:1px solid var(--border-light);
 }
 </style>
 </head>
 <body>
+
 <div class="top">
-  <h1 id="title">KIT 楼号查找器</h1>
+  <h1 id="title">KIT Campus Navigator</h1>
   <div class="lang">
-    <button id="btn-zh" class="on">中文</button>
-    <button id="btn-en">English</button>
+    <button id="btn-en" class="on">English</button>
+    <button id="btn-zh">中文</button>
   </div>
 </div>
 <p class="sub" id="sub"></p>
 <div class="status" id="status"></div>
+
 <div class="search-wrap">
   <input id="q" type="search" autocomplete="off" spellcheck="false" autofocus>
   <button class="clear-btn" id="clear-btn" aria-label="Clear">✕</button>
 </div>
+
 <div class="filters" id="filters"></div>
-<div class="chips" id="chips"></div>
+
+<div class="chips-section" id="chips-section">
+  <div class="chips-title" id="chips-title">Frequent Landmarks:</div>
+  <div class="chips" id="chips"></div>
+</div>
+
 <div class="count" id="count"></div>
 <div id="results"></div>
 <div class="note" id="note"></div>
 <footer id="footer"></footer>
 
 <script>
-// ─── Embedded fallback snapshot (2026-11-12) ───────────────────────────────
-const EMBEDDED = {"data":[{"t":"Emil-Mosonyi-Hörsaal HS 62 (10.81)","c":"lecturehall","lat":49.01014,"lng":8.41554,"addr":"Otto-Ammann-Platz 1"},{"t":"Theodor-Rehbock-Hörsaal HS 59 (10.81)","c":"lecturehall","lat":49.01014,"lng":8.41554,"addr":"Otto-Ammann-Platz 1"},{"t":"Engesser-Hörsaal HS 93 (10.81)","c":"lecturehall","lat":49.01014,"lng":8.41554,"addr":"Otto-Ammann-Platz 1"},{"t":"Egon-Eiermann-Hörsaal (20.40)","c":"lecturehall","lat":49.01097,"lng":8.41095},{"t":"Sport-Hörsaal (40.40)","c":"lecturehall","lat":49.0158,"lng":8.41636},{"t":"Hochspannungstechnik-Hörsaal (30.35)","c":"lecturehall","lat":49.01197,"lng":8.41272},{"t":"Johann-Gottfried-Tulla-Hörsaal (11.40)","c":"lecturehall","lat":49.01023,"lng":8.41187},{"t":"Hörsaal am Fasanengarten (50.35)","c":"lecturehall","lat":49.01472,"lng":8.42042},{"t":"Otto-Lehmann-Hörsaal (30.22)","c":"lecturehall","lat":49.01242,"lng":8.41073},{"t":"Friedrich-Engesser-Hörsaal (10.81)","c":"lecturehall","lat":49.01014,"lng":8.41554},{"t":"Kleiner Hörsaal Elektrotechnik (11.10)","c":"lecturehall","lat":49.01065,"lng":8.41281},{"t":"Lichttechnik-Hörsaal (30.34)","c":"lecturehall","lat":49.01212,"lng":8.41304},{"t":"Großer Hörsaal Bauingenieure (10.50)","c":"lecturehall","lat":49.00962,"lng":8.417},{"t":"Carl-Benz-Hörsaal (10.21)","c":"lecturehall","lat":49.00946,"lng":8.41343},{"t":"Franz-Grashof-Hörsaal (10.91)","c":"lecturehall","lat":49.00994,"lng":8.41329},{"t":"Architektur-Hörsaal 9 (20.40)","c":"lecturehall","lat":49.01097,"lng":8.41095},{"t":"Engelbert-Arnold-Hörsaal (11.10)","c":"lecturehall","lat":49.01064,"lng":8.41281},{"t":"Ferdinand-Redtenbacher-Hörsaal (10.91)","c":"lecturehall","lat":49.00992,"lng":8.41283},{"t":"Nachrichtentechnik-Hörsaal (30.10)","c":"lecturehall","lat":49.01271,"lng":8.40944},{"t":"Messtechnik-Hörsaal (30.33)","c":"lecturehall","lat":49.01231,"lng":8.41322},{"t":"Christian-Gerthsen-Hörsaal (30.21)","c":"lecturehall","lat":49.01243,"lng":8.41157},{"t":"Gottlieb-Daimler-Hörsaal (10.21)","c":"lecturehall","lat":49.00946,"lng":8.41343},{"t":"Audimax (30.95)","c":"lecturehall","lat":49.01271,"lng":8.41573},{"t":"Wolfgang-Gaede-Hörsaal (30.22)","c":"lecturehall","lat":49.01256,"lng":8.41039},{"t":"Physik-Hörsaal Nr. 3 (30.22)","c":"lecturehall","lat":49.01242,"lng":8.41071},{"t":"Heinrich-Hertz-Hörsaal (10.11)","c":"lecturehall","lat":49.00948,"lng":8.41292},{"t":"Chemie-Hörsaal I (30.41)","c":"lecturehall","lat":49.0126,"lng":8.41385},{"t":"Rudolf-Criegee-Hörsaal (30.41)","c":"lecturehall","lat":49.0126,"lng":8.41385},{"t":"Rudolf-Plank-Hörsaal (40.32)","c":"lecturehall","lat":49.01457,"lng":8.41734},{"t":"Oberer Hörsaal Maschinenbau (10.91)","c":"lecturehall","lat":49.00992,"lng":8.41285},{"t":"Mittlerer Hörsaal Maschinenbau (10.91)","c":"lecturehall","lat":49.00996,"lng":8.41291},{"t":"Kleiner Hörsaal Bauingenieure (10.50)","c":"lecturehall","lat":49.00972,"lng":8.41689},{"t":"Hörsaal 101 (10.50)","c":"lecturehall","lat":49.00968,"lng":8.41689},{"t":"Hörsaal 102 (10.50)","c":"lecturehall","lat":49.00969,"lng":8.41687},{"t":"Physik-Hörsaal Nr. 4 (30.22)","c":"lecturehall","lat":49.01245,"lng":8.41066},{"t":"Fritz-Haller-Hörsaal (20.40)","c":"lecturehall","lat":49.01104,"lng":8.4109},{"t":"Neuer Hörsaal Architektur (20.40)","c":"lecturehall","lat":49.01098,"lng":8.41091},{"t":"Neuer Hörsaal Chemie (30.46)","c":"lecturehall","lat":49.01183,"lng":8.41388},{"t":"Engler-Bunte-Hörsaal (40.50)","c":"lecturehall","lat":49.01401,"lng":8.41431},{"t":"Bauingenieure-Hörsaal (50.31)","c":"lecturehall","lat":49.01414,"lng":8.42099},{"t":"Chemie-Hörsaal II (30.41)","c":"lecturehall","lat":49.01241,"lng":8.41389},{"t":"Chemie-Hörsaal III (30.41)","c":"lecturehall","lat":49.01241,"lng":8.41384},{"t":"10.21","c":"building","lat":49.00945,"lng":8.41346},{"t":"10.23","c":"building","lat":49.00937,"lng":8.41428},{"t":"40.27","c":"building","lat":49.01437,"lng":8.41573},{"t":"30.43","c":"building","lat":49.01237,"lng":8.41451},{"t":"40.18","c":"building","lat":49.0155,"lng":8.41484},{"t":"40.19","c":"building","lat":49.01448,"lng":8.41445},{"t":"20.54","c":"building","lat":49.01195,"lng":8.40923},{"t":"20.52","c":"building","lat":49.01242,"lng":8.409},{"t":"20.53","c":"building","lat":49.01217,"lng":8.409},{"t":"20.50","c":"building","lat":49.0124,"lng":8.40874},{"t":"20.51","c":"building","lat":49.0123,"lng":8.40904},{"t":"40.11","c":"building","lat":49.014,"lng":8.41489},{"t":"40.12","c":"building","lat":49.01436,"lng":8.41486},{"t":"40.13","c":"building","lat":49.01471,"lng":8.41518},{"t":"40.14","c":"building","lat":49.01478,"lng":8.41453},{"t":"30.12","c":"building","lat":49.01312,"lng":8.40918},{"t":"30.11","c":"building","lat":49.0131,"lng":8.40976},{"t":"30.10","c":"building","lat":49.01288,"lng":8.40949},{"t":"08.03","c":"building","lat":49.00761,"lng":8.40435},{"t":"30.96","c":"building","lat":49.013,"lng":8.41598},{"t":"30.95","c":"building","lat":49.01268,"lng":8.41569},{"t":"30.93","c":"building","lat":49.01273,"lng":8.41333},{"t":"30.29","c":"building","lat":49.01192,"lng":8.41168},{"t":"30.91","c":"building","lat":49.01328,"lng":8.41374},{"t":"30.90","c":"building","lat":49.01328,"lng":8.41426},{"t":"40.21","c":"building","lat":49.01407,"lng":8.4157},{"t":"11.40","c":"building","lat":49.01017,"lng":8.41184},{"t":"10.95","c":"building","lat":49.01006,"lng":8.41419},{"t":"10.94","c":"building","lat":49.01029,"lng":8.4138},{"t":"01.52","c":"building","lat":49.01307,"lng":8.40839},{"t":"01.51","c":"building","lat":49.0132,"lng":8.40771},{"t":"10.50","c":"building","lat":49.00951,"lng":8.41695},{"t":"06.46","c":"building","lat":49.02042,"lng":8.36752},{"t":"30.80","c":"building","lat":49.01327,"lng":8.41485},{"t":"30.81","c":"building","lat":49.01109,"lng":8.41467},{"t":"30.82","c":"building","lat":49.01112,"lng":8.4153},{"t":"50.38","c":"building","lat":49.01491,"lng":8.42104},{"t":"40.23","c":"building","lat":49.01416,"lng":8.41626},{"t":"50.10","c":"building","lat":49.01286,"lng":8.41928},{"t":"50.12","c":"building","lat":49.01289,"lng":8.41956},{"t":"40.22","c":"building","lat":49.01405,"lng":8.4161},{"t":"40.16","c":"building","lat":49.0153,"lng":8.41501},{"t":"20.12","c":"building","lat":49.01257,"lng":8.40664},{"t":"10.40","c":"building","lat":49.00924,"lng":8.41664},{"t":"30.79","c":"building","lat":49.0133,"lng":8.41711},{"t":"05.20","c":"building","lat":49.009,"lng":8.40958},{"t":"30.70","c":"building","lat":49.013,"lng":8.41709},{"t":"40.15","c":"building","lat":49.01508,"lng":8.415},{"t":"10.62","c":"building","lat":49.01055,"lng":8.41748},{"t":"40.17","c":"building","lat":49.01546,"lng":8.41451},{"t":"30.46","c":"building","lat":49.01168,"lng":8.41384},{"t":"50.24","c":"building","lat":49.01009,"lng":8.41938},{"t":"40.24","c":"building","lat":49.01428,"lng":8.41624},{"t":"02.95","c":"building","lat":49.01066,"lng":8.40254},{"t":"40.26","c":"building","lat":49.0145,"lng":8.41598},{"t":"20.14","c":"building","lat":49.01196,"lng":8.4075},{"t":"40.43","c":"building","lat":49.01653,"lng":8.41585},{"t":"40.41","c":"building","lat":49.01795,"lng":8.4142},{"t":"40.40","c":"building","lat":49.01579,"lng":8.41638},{"t":"30.60","c":"building","lat":49.01233,"lng":8.41669},{"t":"30.61","c":"building","lat":49.01229,"lng":8.41729},{"t":"10.70","c":"building","lat":49.00986,"lng":8.41629},{"t":"50.33","c":"building","lat":49.01459,"lng":8.42128},{"t":"50.32","c":"building","lat":49.01395,"lng":8.42157},{"t":"50.31","c":"building","lat":49.01413,"lng":8.42077},{"t":"50.36","c":"building","lat":49.01493,"lng":8.41964},{"t":"50.35","c":"building","lat":49.01469,"lng":8.42042},{"t":"50.34","c":"building","lat":49.01389,"lng":8.41951},{"t":"11.10","c":"building","lat":49.01078,"lng":8.41282},{"t":"11.11","c":"building","lat":49.01105,"lng":8.41261},{"t":"10.64","c":"building","lat":49.00993,"lng":8.41741},{"t":"20.13","c":"building","lat":49.01227,"lng":8.40707},{"t":"20.11","c":"building","lat":49.01296,"lng":8.40643},{"t":"10.61","c":"building","lat":49.01016,"lng":8.41743},{"t":"10.63","c":"building","lat":49.01048,"lng":8.41707},{"t":"40.29","c":"building","lat":49.01468,"lng":8.41574},{"t":"50.25","c":"building","lat":49.00995,"lng":8.41917},{"t":"50.20","c":"building","lat":49.01025,"lng":8.4189},{"t":"50.21","c":"building","lat":49.01087,"lng":8.419},{"t":"50.22","c":"building","lat":49.01082,"lng":8.41959},{"t":"50.23","c":"building","lat":49.01007,"lng":8.41969},{"t":"30.51","c":"building","lat":49.01099,"lng":8.41697},{"t":"30.50","c":"building","lat":49.01134,"lng":8.41642},{"t":"05.01","c":"building","lat":49.00904,"lng":8.40535},{"t":"20.21","c":"building","lat":49.0121,"lng":8.40808},{"t":"20.20","c":"building","lat":49.01251,"lng":8.40796},{"t":"11.23","c":"building","lat":49.01074,"lng":8.41339},{"t":"11.22","c":"building","lat":49.01059,"lng":8.41404},{"t":"11.21","c":"building","lat":49.01079,"lng":8.41405},{"t":"11.20","c":"building","lat":49.01103,"lng":8.41217},{"t":"30.45","c":"building","lat":49.01169,"lng":8.41382},{"t":"07.30","c":"building","lat":49.01414,"lng":8.42578},{"t":"30.42","c":"building","lat":49.01296,"lng":8.41423},{"t":"10.11","c":"building","lat":49.00933,"lng":8.41223},{"t":"40.28","c":"building","lat":49.01509,"lng":8.41592},{"t":"10.12","c":"building","lat":49.0096,"lng":8.41179},{"t":"40.32","c":"building","lat":49.01453,"lng":8.41733},{"t":"40.31","c":"building","lat":49.01405,"lng":8.41722},{"t":"20.30","c":"building","lat":49.01114,"lng":8.4093},{"t":"30.31","c":"building","lat":49.01242,"lng":8.41319},{"t":"40.33","c":"building","lat":49.01495,"lng":8.41716},{"t":"30.33","c":"building","lat":49.01226,"lng":8.4132},{"t":"30.32","c":"building","lat":49.01239,"lng":8.41271},{"t":"30.35","c":"building","lat":49.01198,"lng":8.41267},{"t":"30.34","c":"building","lat":49.01171,"lng":8.41303},{"t":"30.36","c":"building","lat":49.01193,"lng":8.41234},{"t":"50.40","c":"building","lat":49.01547,"lng":8.42037},{"t":"50.41","c":"building","lat":49.01569,"lng":8.41946},{"t":"01.96","c":"building","lat":49.0089,"lng":8.4113},{"t":"01.94","c":"building","lat":49.00814,"lng":8.40898},{"t":"01.93","c":"building","lat":49.00843,"lng":8.40875},{"t":"01.92","c":"building","lat":49.00845,"lng":8.40891},{"t":"10.91","c":"building","lat":49.0099,"lng":8.41322},{"t":"10.93","c":"building","lat":49.01033,"lng":8.41342},{"t":"10.92","c":"building","lat":49.01033,"lng":8.41301},{"t":"10.96","c":"building","lat":49.00983,"lng":8.41417},{"t":"10.86","c":"building","lat":49.01011,"lng":8.41636},{"t":"10.34","c":"building","lat":49.00921,"lng":8.416},{"t":"10.33","c":"building","lat":49.00937,"lng":8.41602},{"t":"10.32","c":"building","lat":49.00923,"lng":8.41502},{"t":"10.31","c":"building","lat":49.0092,"lng":8.41372},{"t":"10.30","c":"building","lat":49.00958,"lng":8.41548},{"t":"30.22","c":"building","lat":49.01257,"lng":8.41068},{"t":"30.23","c":"building","lat":49.01293,"lng":8.4111},{"t":"20.44","c":"building","lat":49.01111,"lng":8.41109},{"t":"30.24","c":"building","lat":49.01318,"lng":8.41076},{"t":"30.25","c":"building","lat":49.01288,"lng":8.41168},{"t":"40.04","c":"building","lat":49.01519,"lng":8.4145},{"t":"40.02","c":"building","lat":49.01429,"lng":8.41519},{"t":"30.44","c":"building","lat":49.01187,"lng":8.41442},{"t":"10.82","c":"building","lat":49.01022,"lng":8.41555},{"t":"10.83","c":"building","lat":49.01065,"lng":8.41518},{"t":"10.81","c":"building","lat":49.01027,"lng":8.41561},{"t":"11.30","c":"building","lat":49.01027,"lng":8.41252},{"t":"10.87","c":"building","lat":49.01009,"lng":8.41686},{"t":"10.84","c":"building","lat":49.01068,"lng":8.41578},{"t":"10.85","c":"building","lat":49.01065,"lng":8.41646},{"t":"40.25","c":"building","lat":49.01451,"lng":8.41627},{"t":"10.88","c":"building","lat":49.01031,"lng":8.41638},{"t":"10.89","c":"building","lat":49.01037,"lng":8.41656},{"t":"30.21","c":"building","lat":49.01239,"lng":8.41158},{"t":"30.41","c":"building","lat":49.01234,"lng":8.41383},{"t":"20.40","c":"building","lat":49.01126,"lng":8.41137},{"t":"30.28","c":"building","lat":49.01296,"lng":8.41222},{"t":"30.48","c":"building","lat":49.01317,"lng":8.41478},{"t":"30.49","c":"building","lat":49.01351,"lng":8.41538},{"t":"40.50","c":"building","lat":49.01418,"lng":8.41438},{"t":"40.51","c":"building","lat":49.01414,"lng":8.41491},{"t":"40.44","c":"building","lat":49.01615,"lng":8.41488},{"t":"01.80","c":"building","lat":49.00987,"lng":8.41098},{"t":"01.85","c":"building","lat":49.00887,"lng":8.41043},{"t":"01.86","c":"building","lat":49.00631,"lng":8.41061},{"t":"01.87","c":"building","lat":49.0051,"lng":8.41154},{"t":"01.90","c":"building","lat":49.00965,"lng":8.41101},{"t":"01.95","c":"building","lat":49.00903,"lng":8.41213},{"t":"01.99","c":"building","lat":49.00966,"lng":8.40757},{"t":"09.20","c":"building","lat":49.00944,"lng":8.39324},{"t":"09.21","c":"building","lat":49.01305,"lng":8.37527},{"t":"09.22","c":"building","lat":48.9933,"lng":8.34448},{"t":"09.23","c":"building","lat":49.00519,"lng":8.39072},{"t":"3300","c":"building","lat":49.01121,"lng":8.39536},{"t":"10.22 - LAZ","c":"building","lat":49.00941,"lng":8.41389},{"t":"50.28 - InformatiKOM II","c":"building","lat":49.01057,"lng":8.41924},{"t":"50.19 - InformatiKOM I","c":"building","lat":49.01137,"lng":8.41882},{"t":"Mensa","c":"facility","lat":49.01196,"lng":8.41684},{"t":"Bibliothek (Campus Süd)","c":"facility","lat":49.01101,"lng":8.41642},{"t":"Bibliothek (Campus Nord)","c":"facility","lat":49.09464,"lng":8.4283},{"t":"Sprachenzentrum (Geb. 50.20)","c":"facility","lat":49.01035,"lng":8.41879},{"t":"AKK (Studierendenzentrum)","c":"facility","lat":49.01112,"lng":8.41487},{"t":"Studierendenservice","c":"facility","lat":49.00976,"lng":8.4118},{"t":"KIT-Shuttle (Haltestelle Campus Süd)","c":"facility","lat":49.01017,"lng":8.41823},{"t":"House of Competence (HOC)","c":"facility","lat":49.00636,"lng":8.41065},{"t":"Scientific Computing Center (SCC), CS","c":"facility","lat":49.01253,"lng":8.40793},{"t":"Internationales (INTL)","c":"facility","lat":49.01031,"lng":8.41889},{"t":"International Students Office (INTL)","c":"facility","lat":49.01031,"lng":8.41889},{"t":"AStA","c":"facility","lat":49.01215,"lng":8.41597},{"t":"MINT-Kolleg","c":"facility","lat":49.01035,"lng":8.41879},{"t":"Lernzentrum am Fasanenschlösschen (Geb. 30.28)","c":"facility","lat":49.01267,"lng":8.41226},{"t":"Zentrale Studienberatung (ZSB)","c":"facility","lat":49.01038,"lng":8.41248},{"t":"Hochschulsport","c":"facility","lat":49.01605,"lng":8.41686},{"t":"KIT-Shuttle (Haltestelle Campus Nord, Südtor)","c":"facility","lat":49.09132,"lng":8.42808}],"addr":{"10.81":"Otto-Ammann-Platz 1, 76131 Karlsruhe","10.50":"Reinhard-Baumeister-Platz 1, 76131 Karlsruhe","40.40":"Engler-Bunte-Ring 15, 76131 Karlsruhe","50.20":"Adenauerring 2, 76131 Karlsruhe (OSM nearby)","30.21":"Engesserstraße 9, 76131 Karlsruhe (OSM nearby)","20.40":"Englerstraße 7, 76131 Karlsruhe (OSM nearby)","40.32":"Engler-Bunte-Ring 21, 76131 Karlsruhe (OSM nearby)","50.41":"Adenauerring 20a, 76131 Karlsruhe (OSM nearby)","30.95":"Straße am Forum 1, 76131 Karlsruhe (OSM nearby)","10.11":"Engesserstraße 5, 76131 Karlsruhe (OSM nearby)","10.21":"Kaiserstraße 12, 76131 Karlsruhe (OSM nearby)","30.22":"Wolfgang-Gaede-Str. 1, 76131 Karlsruhe (OSM nearby)","11.30":"Hertzstraße 16, 76131 Karlsruhe (OSM nearby)"},"freq":[{"n":"10.81","note":"MCS Tutorium · Emil-Mosonyi HS 62","note_en":"MCS Tutorial · Emil-Mosonyi HS 62","lat":49.01027,"lng":8.41561},{"n":"50.20","note":"Sprachenzentrum","note_en":"Language Centre","lat":49.01025,"lng":8.4189},{"n":"10.11","note":"MCS Vorlesung · Hertz-Hörsaal","note_en":"MCS Lecture · Heinrich-Hertz HS","lat":49.00933,"lng":8.41223},{"n":"10.21","note":"Carl-Benz-Hörsaal","note_en":"Carl-Benz Lecture Hall","lat":49.00945,"lng":8.41346},{"n":"30.21","note":"FOP · Gerthsen-Hörsaal","note_en":"FOP · Gerthsen Lecture Hall","lat":49.01239,"lng":8.41158},{"n":"20.40","note":"OEMV · Eiermann-Hörsaal","note_en":"OEMV · Eiermann Lecture Hall","lat":49.01126,"lng":8.41137},{"n":"10.50","note":"Großer HS Bauingenieure","note_en":"Main Civil Engineering Hall","lat":49.00951,"lng":8.41695},{"n":"50.41","note":"MCS Tutorium SR -134","note_en":"MCS Tutorial SR -134","lat":49.01569,"lng":8.41946},{"n":"40.32","note":"MCS Tutorium SR 032","note_en":"MCS Tutorial SR 032","lat":49.01453,"lng":8.41733},{"n":"40.40","note":"Sport / IfSS","note_en":"Sports Institute","lat":49.01579,"lng":8.41638},{"n":"30.95","note":"Audimax","note_en":"Audimax","lat":49.01268,"lng":8.41569},{"n":"11.30","note":"Studierendenservice","note_en":"Student Services","lat":49.01027,"lng":8.41252}]};
+// ─── Embedded snapshot (all campus data) ───────────────────────────────────
+const EMBEDDED = {"data":[{"t":"Emil-Mosonyi-Hörsaal HS 62 (10.81)","c":"lecturehall","lat":49.01014,"lng":8.41554,"addr":"Otto-Ammann-Platz 1"},{"t":"Theodor-Rehbock-Hörsaal HS 59 (10.81)","c":"lecturehall","lat":49.01014,"lng":8.41554,"addr":"Otto-Ammann-Platz 1"},{"t":"Engesser-Hörsaal HS 93 (10.81)","c":"lecturehall","lat":49.01014,"lng":8.41554,"addr":"Otto-Ammann-Platz 1"},{"t":"Egon-Eiermann-Hörsaal (20.40)","c":"lecturehall","lat":49.01097,"lng":8.41095},{"t":"Sport-Hörsaal (40.40)","c":"lecturehall","lat":49.0158,"lng":8.41636},{"t":"Hochspannungstechnik-Hörsaal (30.35)","c":"lecturehall","lat":49.01197,"lng":8.41272},{"t":"Johann-Gottfried-Tulla-Hörsaal (11.40)","c":"lecturehall","lat":49.01023,"lng":8.41187},{"t":"Hörsaal am Fasanengarten (50.35)","c":"lecturehall","lat":49.01472,"lng":8.42042},{"t":"Otto-Lehmann-Hörsaal (30.22)","c":"lecturehall","lat":49.01242,"lng":8.41073},{"t":"Friedrich-Engesser-Hörsaal (10.81)","c":"lecturehall","lat":49.01014,"lng":8.41554},{"t":"Kleiner Hörsaal Elektrotechnik (11.10)","c":"lecturehall","lat":49.01065,"lng":8.41281},{"t":"Lichttechnik-Hörsaal (30.34)","c":"lecturehall","lat":49.01212,"lng":8.41304},{"t":"Großer Hörsaal Bauingenieure (10.50)","c":"lecturehall","lat":49.00962,"lng":8.417},{"t":"Carl-Benz-Hörsaal (10.21)","c":"lecturehall","lat":49.00946,"lng":8.41343},{"t":"Franz-Grashof-Hörsaal (10.91)","c":"lecturehall","lat":49.00994,"lng":8.41329},{"t":"Architektur-Hörsaal 9 (20.40)","c":"lecturehall","lat":49.01097,"lng":8.41095},{"t":"Engelbert-Arnold-Hörsaal (11.10)","c":"lecturehall","lat":49.01064,"lng":8.41281},{"t":"Ferdinand-Redtenbacher-Hörsaal (10.91)","c":"lecturehall","lat":49.00992,"lng":8.41283},{"t":"Nachrichtentechnik-Hörsaal (30.10)","c":"lecturehall","lat":49.01271,"lng":8.40944},{"t":"Messtechnik-Hörsaal (30.33)","c":"lecturehall","lat":49.01231,"lng":8.41322},{"t":"Christian-Gerthsen-Hörsaal (30.21)","c":"lecturehall","lat":49.01243,"lng":8.41157},{"t":"Gottlieb-Daimler-Hörsaal (10.21)","c":"lecturehall","lat":49.00946,"lng":8.41343},{"t":"Audimax (30.95)","c":"lecturehall","lat":49.01271,"lng":8.41573},{"t":"Wolfgang-Gaede-Hörsaal (30.22)","c":"lecturehall","lat":49.01256,"lng":8.41039},{"t":"Physik-Hörsaal Nr. 3 (30.22)","c":"lecturehall","lat":49.01242,"lng":8.41071},{"t":"Heinrich-Hertz-Hörsaal (10.11)","c":"lecturehall","lat":49.00948,"lng":8.41292},{"t":"Chemie-Hörsaal I (30.41)","c":"lecturehall","lat":49.0126,"lng":8.41385},{"t":"Rudolf-Criegee-Hörsaal (30.41)","c":"lecturehall","lat":49.0126,"lng":8.41385},{"t":"Rudolf-Plank-Hörsaal (40.32)","c":"lecturehall","lat":49.01457,"lng":8.41734},{"t":"Oberer Hörsaal Maschinenbau (10.91)","c":"lecturehall","lat":49.00992,"lng":8.41285},{"t":"Mittlerer Hörsaal Maschinenbau (10.91)","c":"lecturehall","lat":49.00996,"lng":8.41291},{"t":"Kleiner Hörsaal Bauingenieure (10.50)","c":"lecturehall","lat":49.00972,"lng":8.41689},{"t":"Hörsaal 101 (10.50)","c":"lecturehall","lat":49.00968,"lng":8.41689},{"t":"Hörsaal 102 (10.50)","c":"lecturehall","lat":49.00969,"lng":8.41687},{"t":"Physik-Hörsaal Nr. 4 (30.22)","c":"lecturehall","lat":49.01245,"lng":8.41066},{"t":"Fritz-Haller-Hörsaal (20.40)","c":"lecturehall","lat":49.01104,"lng":8.4109},{"t":"Neuer Hörsaal Architektur (20.40)","c":"lecturehall","lat":49.01098,"lng":8.41091},{"t":"Neuer Hörsaal Chemie (30.46)","c":"lecturehall","lat":49.01183,"lng":8.41388},{"t":"Engler-Bunte-Hörsaal (40.50)","c":"lecturehall","lat":49.01401,"lng":8.41431},{"t":"Bauingenieure-Hörsaal (50.31)","c":"lecturehall","lat":49.01414,"lng":8.42099},{"t":"Chemie-Hörsaal II (30.41)","c":"lecturehall","lat":49.01241,"lng":8.41389},{"t":"Chemie-Hörsaal III (30.41)","c":"lecturehall","lat":49.01241,"lng":8.41384},{"t":"10.21","c":"building","lat":49.00945,"lng":8.41346},{"t":"10.23","c":"building","lat":49.00937,"lng":8.41428},{"t":"40.27","c":"building","lat":49.01437,"lng":8.41573},{"t":"30.43","c":"building","lat":49.01237,"lng":8.41451},{"t":"40.18","c":"building","lat":49.0155,"lng":8.41484},{"t":"40.19","c":"building","lat":49.01448,"lng":8.41445},{"t":"20.54","c":"building","lat":49.01195,"lng":8.40923},{"t":"20.52","c":"building","lat":49.01242,"lng":8.409},{"t":"20.53","c":"building","lat":49.01217,"lng":8.409},{"t":"20.50","c":"building","lat":49.0124,"lng":8.40874},{"t":"20.51","c":"building","lat":49.0123,"lng":8.40904},{"t":"40.11","c":"building","lat":49.014,"lng":8.41489},{"t":"40.12","c":"building","lat":49.01436,"lng":8.41486},{"t":"40.13","c":"building","lat":49.01471,"lng":8.41518},{"t":"40.14","c":"building","lat":49.01478,"lng":8.41453},{"t":"30.12","c":"building","lat":49.01312,"lng":8.40918},{"t":"30.11","c":"building","lat":49.0131,"lng":8.40976},{"t":"30.10","c":"building","lat":49.01288,"lng":8.40949},{"t":"08.03","c":"building","lat":49.00761,"lng":8.40435},{"t":"30.96","c":"building","lat":49.013,"lng":8.41598},{"t":"30.95","c":"building","lat":49.01268,"lng":8.41569},{"t":"30.93","c":"building","lat":49.01273,"lng":8.41333},{"t":"30.29","c":"building","lat":49.01192,"lng":8.41168},{"t":"30.91","c":"building","lat":49.01328,"lng":8.41374},{"t":"30.90","c":"building","lat":49.01328,"lng":8.41426},{"t":"40.21","c":"building","lat":49.01407,"lng":8.4157},{"t":"11.40","c":"building","lat":49.01017,"lng":8.41184},{"t":"10.95","c":"building","lat":49.01006,"lng":8.41419},{"t":"10.94","c":"building","lat":49.01029,"lng":8.4138},{"t":"01.52","c":"building","lat":49.01307,"lng":8.40839},{"t":"01.51","c":"building","lat":49.0132,"lng":8.40771},{"t":"10.50","c":"building","lat":49.00951,"lng":8.41695},{"t":"06.46","c":"building","lat":49.02042,"lng":8.36752},{"t":"30.80","c":"building","lat":49.01327,"lng":8.41485},{"t":"30.81","c":"building","lat":49.01109,"lng":8.41467},{"t":"30.82","c":"building","lat":49.01112,"lng":8.4153},{"t":"50.38","c":"building","lat":49.01491,"lng":8.42104},{"t":"40.23","c":"building","lat":49.01416,"lng":8.41626},{"t":"50.10","c":"building","lat":49.01286,"lng":8.41928},{"t":"50.12","c":"building","lat":49.01289,"lng":8.41956},{"t":"40.22","c":"building","lat":49.01405,"lng":8.4161},{"t":"40.16","c":"building","lat":49.0153,"lng":8.41501},{"t":"20.12","c":"building","lat":49.01257,"lng":8.40664},{"t":"10.40","c":"building","lat":49.00924,"lng":8.41664},{"t":"30.79","c":"building","lat":49.0133,"lng":8.41711},{"t":"05.20","c":"building","lat":49.009,"lng":8.40958},{"t":"30.70","c":"building","lat":49.013,"lng":8.41709},{"t":"40.15","c":"building","lat":49.01508,"lng":8.415},{"t":"10.62","c":"building","lat":49.01055,"lng":8.41748},{"t":"40.17","c":"building","lat":49.01546,"lng":8.41451},{"t":"30.46","c":"building","lat":49.01168,"lng":8.41384},{"t":"50.24","c":"building","lat":49.01009,"lng":8.41938},{"t":"40.24","c":"building","lat":49.01428,"lng":8.41624},{"t":"02.95","c":"building","lat":49.01066,"lng":8.40254},{"t":"40.26","c":"building","lat":49.0145,"lng":8.41598},{"t":"20.14","c":"building","lat":49.01196,"lng":8.4075},{"t":"40.43","c":"building","lat":49.01653,"lng":8.41585},{"t":"40.41","c":"building","lat":49.01795,"lng":8.4142},{"t":"40.40","c":"building","lat":49.01579,"lng":8.41638},{"t":"30.60","c":"building","lat":49.01233,"lng":8.41669},{"t":"30.61","c":"building","lat":49.01229,"lng":8.41729},{"t":"10.70","c":"building","lat":49.00986,"lng":8.41629},{"t":"50.33","c":"building","lat":49.01459,"lng":8.42128},{"t":"50.32","c":"building","lat":49.01395,"lng":8.42157},{"t":"50.31","c":"building","lat":49.01413,"lng":8.42077},{"t":"50.36","c":"building","lat":49.01493,"lng":8.41964},{"t":"50.35","c":"building","lat":49.01469,"lng":8.42042},{"t":"50.34","c":"building","lat":49.01389,"lng":8.41951},{"t":"11.10","c":"building","lat":49.01078,"lng":8.41282},{"t":"11.11","c":"building","lat":49.01105,"lng":8.41261},{"t":"10.64","c":"building","lat":49.00993,"lng":8.41741},{"t":"20.13","c":"building","lat":49.01227,"lng":8.40707},{"t":"20.11","c":"building","lat":49.01296,"lng":8.40643},{"t":"10.61","c":"building","lat":49.01016,"lng":8.41743},{"t":"10.63","c":"building","lat":49.01048,"lng":8.41707},{"t":"40.29","c":"building","lat":49.01468,"lng":8.41574},{"t":"50.25","c":"building","lat":49.00995,"lng":8.41917},{"t":"50.20","c":"building","lat":49.01025,"lng":8.4189},{"t":"50.21","c":"building","lat":49.01087,"lng":8.419},{"t":"50.22","c":"building","lat":49.01082,"lng":8.41959},{"t":"50.23","c":"building","lat":49.01007,"lng":8.41969},{"t":"30.51","c":"building","lat":49.01099,"lng":8.41697},{"t":"30.50","c":"building","lat":49.01134,"lng":8.41642},{"t":"05.01","c":"building","lat":49.00904,"lng":8.40535},{"t":"20.21","c":"building","lat":49.0121,"lng":8.40808},{"t":"20.20","c":"building","lat":49.01251,"lng":8.40796},{"t":"11.23","c":"building","lat":49.01074,"lng":8.41339},{"t":"11.22","c":"building","lat":49.01059,"lng":8.41404},{"t":"11.21","c":"building","lat":49.01079,"lng":8.41405},{"t":"11.20","c":"building","lat":49.01103,"lng":8.41217},{"t":"30.45","c":"building","lat":49.01169,"lng":8.41382},{"t":"07.30","c":"building","lat":49.01414,"lng":8.42578},{"t":"30.42","c":"building","lat":49.01296,"lng":8.41423},{"t":"10.11","c":"building","lat":49.00933,"lng":8.41223},{"t":"40.28","c":"building","lat":49.01509,"lng":8.41592},{"t":"10.12","c":"building","lat":49.0096,"lng":8.41179},{"t":"40.32","c":"building","lat":49.01453,"lng":8.41733},{"t":"40.31","c":"building","lat":49.01405,"lng":8.41722},{"t":"20.30","c":"building","lat":49.01114,"lng":8.4093},{"t":"30.31","c":"building","lat":49.01242,"lng":8.41319},{"t":"40.33","c":"building","lat":49.01495,"lng":8.41716},{"t":"30.33","c":"building","lat":49.01226,"lng":8.4132},{"t":"30.32","c":"building","lat":49.01239,"lng":8.41271},{"t":"30.35","c":"building","lat":49.01198,"lng":8.41267},{"t":"30.34","c":"building","lat":49.01171,"lng":8.41303},{"t":"30.36","c":"building","lat":49.01193,"lng":8.41234},{"t":"50.40","c":"building","lat":49.01547,"lng":8.42037},{"t":"50.41","c":"building","lat":49.01569,"lng":8.41946},{"t":"01.96","c":"building","lat":49.0089,"lng":8.4113},{"t":"01.94","c":"building","lat":49.00814,"lng":8.40898},{"t":"01.93","c":"building","lat":49.00843,"lng":8.40875},{"t":"01.92","c":"building","lat":49.00845,"lng":8.40891},{"t":"10.91","c":"building","lat":49.0099,"lng":8.41322},{"t":"10.93","c":"building","lat":49.01033,"lng":8.41342},{"t":"10.92","c":"building","lat":49.01033,"lng":8.41301},{"t":"10.96","c":"building","lat":49.00983,"lng":8.41417},{"t":"10.86","c":"building","lat":49.01011,"lng":8.41636},{"t":"10.34","c":"building","lat":49.00921,"lng":8.416},{"t":"10.33","c":"building","lat":49.00937,"lng":8.41602},{"t":"10.32","c":"building","lat":49.00923,"lng":8.41502},{"t":"10.31","c":"building","lat":49.0092,"lng":8.41372},{"t":"10.30","c":"building","lat":49.00958,"lng":8.41548},{"t":"30.22","c":"building","lat":49.01257,"lng":8.41068},{"t":"30.23","c":"building","lat":49.01293,"lng":8.4111},{"t":"20.44","c":"building","lat":49.01111,"lng":8.41109},{"t":"30.24","c":"building","lat":49.01318,"lng":8.41076},{"t":"30.25","c":"building","lat":49.01288,"lng":8.41168},{"t":"40.04","c":"building","lat":49.01519,"lng":8.4145},{"t":"40.02","c":"building","lat":49.01429,"lng":8.41519},{"t":"30.44","c":"building","lat":49.01187,"lng":8.41442},{"t":"10.82","c":"building","lat":49.01022,"lng":8.41555},{"t":"10.83","c":"building","lat":49.01065,"lng":8.41518},{"t":"10.81","c":"building","lat":49.01027,"lng":8.41561},{"t":"11.30","c":"building","lat":49.01027,"lng":8.41252},{"t":"10.87","c":"building","lat":49.01009,"lng":8.41686},{"t":"10.84","c":"building","lat":49.01068,"lng":8.41578},{"t":"10.85","c":"building","lat":49.01065,"lng":8.41646},{"t":"40.25","c":"building","lat":49.01451,"lng":8.41627},{"t":"10.88","c":"building","lat":49.01031,"lng":8.41638},{"t":"10.89","c":"building","lat":49.01037,"lng":8.41656},{"t":"30.21","c":"building","lat":49.01239,"lng":8.41158},{"t":"30.41","c":"building","lat":49.01234,"lng":8.41383},{"t":"20.40","c":"building","lat":49.01126,"lng":8.41137},{"t":"30.28","c":"building","lat":49.01296,"lng":8.41222},{"t":"30.48","c":"building","lat":49.01317,"lng":8.41478},{"t":"30.49","c":"building","lat":49.01351,"lng":8.41538},{"t":"40.50","c":"building","lat":49.01418,"lng":8.41438},{"t":"40.51","c":"building","lat":49.01414,"lng":8.41491},{"t":"40.44","c":"building","lat":49.01615,"lng":8.41488},{"t":"01.80","c":"building","lat":49.00987,"lng":8.41098},{"t":"01.85","c":"building","lat":49.00887,"lng":8.41043},{"t":"01.86","c":"building","lat":49.00631,"lng":8.41061},{"t":"01.87","c":"building","lat":49.0051,"lng":8.41154},{"t":"01.90","c":"building","lat":49.00965,"lng":8.41101},{"t":"01.95","c":"building","lat":49.00903,"lng":8.41213},{"t":"01.99","c":"building","lat":49.00966,"lng":8.40757},{"t":"09.20","c":"building","lat":49.00944,"lng":8.39324},{"t":"09.21","c":"building","lat":49.01305,"lng":8.37527},{"t":"09.22","c":"building","lat":48.9933,"lng":8.34448},{"t":"09.23","c":"building","lat":49.00519,"lng":8.39072},{"t":"3300","c":"building","lat":49.01121,"lng":8.39536},{"t":"10.22 - LAZ","c":"building","lat":49.00941,"lng":8.41389},{"t":"50.28 - InformatiKOM II","c":"building","lat":49.01057,"lng":8.41924},{"t":"50.19 - InformatiKOM I","c":"building","lat":49.01137,"lng":8.41882},{"t":"Mensa","c":"facility","lat":49.01196,"lng":8.41684},{"t":"Bibliothek (Campus Süd)","c":"facility","lat":49.01101,"lng":8.41642},{"t":"Bibliothek (Campus Nord)","c":"facility","lat":49.09464,"lng":8.4283},{"t":"Sprachenzentrum (Geb. 50.20)","c":"facility","lat":49.01035,"lng":8.41879},{"t":"AKK (Studierendenzentrum)","c":"facility","lat":49.01112,"lng":8.41487},{"t":"Studierendenservice","c":"facility","lat":49.00976,"lng":8.4118},{"t":"KIT-Shuttle (Haltestelle Campus Süd)","c":"facility","lat":49.01017,"lng":8.41823},{"t":"House of Competence (HOC)","c":"facility","lat":49.00636,"lng":8.41065},{"t":"Scientific Computing Center (SCC), CS","c":"facility","lat":49.01253,"lng":8.40793},{"t":"Internationales (INTL)","c":"facility","lat":49.01031,"lng":8.41889},{"t":"International Students Office (INTL)","c":"facility","lat":49.01031,"lng":8.41889},{"t":"AStA","c":"facility","lat":49.01215,"lng":8.41597},{"t":"MINT-Kolleg","c":"facility","lat":49.01035,"lng":8.41879},{"t":"Lernzentrum am Fasanenschlösschen (Geb. 30.28)","c":"facility","lat":49.01267,"lng":8.41226},{"t":"Zentrale Studienberatung (ZSB)","c":"facility","lat":49.01038,"lng":8.41248},{"t":"Hochschulsport","c":"facility","lat":49.01605,"lng":8.41686},{"t":"KIT-Shuttle (Haltestelle Campus Nord, Südtor)","c":"facility","lat":49.09132,"lng":8.42808}],"addr":{"10.81":"Otto-Ammann-Platz 1, 76131 Karlsruhe","10.50":"Reinhard-Baumeister-Platz 1, 76131 Karlsruhe","40.40":"Engler-Bunte-Ring 15, 76131 Karlsruhe","50.20":"Adenauerring 2, 76131 Karlsruhe","30.21":"Engesserstraße 9, 76131 Karlsruhe","20.40":"Englerstraße 7, 76131 Karlsruhe","40.32":"Engler-Bunte-Ring 21, 76131 Karlsruhe","50.41":"Adenauerring 20a, 76131 Karlsruhe","30.95":"Straße am Forum 1, 76131 Karlsruhe","10.11":"Engesserstraße 5, 76131 Karlsruhe","10.21":"Kaiserstraße 12, 76131 Karlsruhe","30.22":"Wolfgang-Gaede-Str. 1, 76131 Karlsruhe","11.30":"Hertzstraße 16, 76131 Karlsruhe"},"freq":[{"n":"30.95","note":"Audimax","note_en":"Audimax"},{"n":"50.20","note":"Sprachenzentrum","note_en":"Language Centre"},{"n":"11.30","note":"Studierendenservice","note_en":"Student Services"},{"n":"30.50","note":"KIT-Bibliothek Süd","note_en":"Main Library"},{"n":"10.81","note":"Bauingenieure / Hörsäle","note_en":"Civil Engineering / Halls"},{"n":"10.11","note":"Heinrich-Hertz-Hörsaal","note_en":"Heinrich-Hertz Hall"},{"n":"10.21","note":"Carl-Benz-Hörsaal","note_en":"Carl-Benz Hall"},{"n":"30.21","note":"Gerthsen-Hörsaal","note_en":"Gerthsen Hall"},{"n":"20.40","note":"Architektur / Eiermann","note_en":"Architecture / Eiermann"},{"n":"10.50","note":"Bauingenieurgebäude","note_en":"Civil Engineering Bldg"},{"n":"50.19","note":"InformatiKOM I","note_en":"InformatiKOM I"},{"n":"40.40","note":"Sportzentrum","note_en":"Sports Centre"}]};
 
-// ─── Manual entries not in KIT database ───────────────────────────────────
 const MANUAL = [
   {t:'Emil-Mosonyi-Hörsaal HS 62 (10.81)',  c:'lecturehall', lat:49.01014, lng:8.41554},
   {t:'Theodor-Rehbock-Hörsaal HS 59 (10.81)',c:'lecturehall', lat:49.01014, lng:8.41554},
@@ -105,69 +213,71 @@ const MANUAL = [
 const KIT_DE = 'https://www.kit.edu/campusplan/public/scripts/data_de.js';
 const KIT_EN = 'https://www.kit.edu/campusplan/public/scripts/data_en.js';
 
-let data   = EMBEDDED.data.slice();
-let addr   = EMBEDDED.addr;
-let freq   = EMBEDDED.freq;
-let live   = false, liveCount = 0;
+let data = EMBEDDED.data.slice();
+let addr = EMBEDDED.addr;
+let freq = EMBEDDED.freq;
+let live = false, liveCount = 0;
 let EN_TITLES = {};
 
-// ─── i18n ─────────────────────────────────────────────────────────────────
+// ─── i18n Dictionary (English by default) ──────────────────────────────────
 const I18N = {
-  zh: {
-    title:'KIT 楼号查找器',
-    sub:'输入楼号如 10.81、50.20，或讲堂名如 Mosonyi、Gerthsen。Google Maps 搜不到楼号——这里直接给你坐标，点"导航"打开地图。',
-    ph:'搜楼号或讲堂名，例如 10.81 或 Gerthsen',
-    all:'全部', building:'楼', lecturehall:'讲堂', institute:'研究所', facility:'设施',
-    nav:'Google 导航', gmaps:'Google 地图', apple:'Apple 地图', kit:'KIT campusplan', osm:'OpenStreetMap', copy:'复制坐标', copied:'已复制 ✓',
-    freqLabel:'常用：',
-    found:   n => '找到 ' + n + ' 条',
-    found20: n => '找到 ' + n + ' 条（只显示前 20 条，输得更具体一些）',
-    none:'没有找到，试试只输楼号，例如 10.81',
-    empty:'输入楼号或讲堂名搜索，或点上面的常用楼快捷键',
-    note:'<b>最快用法：</b>搜到楼 → 点 <b>Google 导航</b>，手机会直接打开 Google Maps 导航到该点。到楼下再看门口编号和 Hörsaal 指示牌。同一楼号里可能有多个讲堂（例如 10.81 里有 Emil-Mosonyi HS62、Friedrich-Engesser、Theodor-Rehbock），坐标都是同一栋楼，进去再找厅。<br><b>备用：</b>KIT campusplan 是官方地图；OpenStreetMap 上楼号标得最全。iOS 用户也可以用 Apple 地图。',
-    live:    n => '● 在线数据：已从 kit.edu 实时拉取，共 ' + n + ' 条。',
-    fallback:n => '○ 离线快照：kit.edu 暂时连不上，使用 2026-11-12 内置快照，共 ' + n + ' 条。联网后刷新即可。',
-    footer:'数据来源：KIT 官方 campusplan（kit.edu/campusplan/public/scripts/data_de.js / data_en.js，Access-Control-Allow-Origin: *）。Emil-Mosonyi 等 3 个讲堂从 Lageplan PDF（2025 年 9 月版）手动补录。地址标有"OSM nearby"的为 OpenStreetMap 附近地址，仅供参考，以坐标为准。'
-  },
   en: {
     title:'KIT Campus Navigator',
-    sub:'Type a building number like 10.81 or 50.20, or a hall name like Mosonyi or Gerthsen. Google Maps cannot find KIT internal numbers — this page gives you coordinates with direct navigation.',
-    ph:'Search building no. or hall, e.g. 10.81 or Gerthsen',
+    sub:'Search building number (e.g. 10.81, 50.20) or lecture hall (e.g. Audimax, Gerthsen). One tap opens turn-by-turn navigation directly in Google Maps or Apple Maps.',
+    ph:'Search building number or hall, e.g. 10.81 or Gerthsen',
     all:'All', building:'Buildings', lecturehall:'Lecture halls', institute:'Institutes', facility:'Facilities',
-    nav:'Navigate (Google)', gmaps:'Google Maps', apple:'Apple Maps', kit:'KIT campusplan', osm:'OpenStreetMap', copy:'Copy coords', copied:'Copied ✓',
-    freqLabel:'Quick access: ',
-    found:   n => 'Found ' + n + ' result' + (n===1?'':'s'),
-    found20: n => 'Found ' + n + ' results (showing first 20 — be more specific)',
-    none:'Nothing found — try just the building number, e.g. 10.81',
-    empty:'Type a building number or hall name, or tap a shortcut above',
-    note:'<b>Fastest:</b> find the building → tap <b>Navigate (Google)</b> and your phone opens Google Maps navigation. At the building, follow signs to your Hörsaal. One building number can hold multiple halls (e.g. 10.81 holds Emil-Mosonyi HS62, Friedrich-Engesser and Theodor-Rehbock) — all share the same coordinates.<br><b>Backup:</b> the KIT campusplan link shows the official map; OpenStreetMap labels KIT numbers most completely. iOS users can also use Apple Maps.',
-    live:    n => '● Live data: fetched from kit.edu, ' + n + ' entries total.',
-    fallback:n => '○ Offline snapshot: kit.edu unreachable, using built-in snapshot from 2026-11-12 (' + n + ' entries). Refresh when online.',
-    footer:'Data: KIT campusplan (kit.edu/campusplan/public/scripts/data_de.js / data_en.js, Access-Control-Allow-Origin: *). Emil-Mosonyi and 2 other halls added manually from the Lageplan PDF (Sept 2025). Addresses marked "OSM nearby" are reverse-geocoded for orientation only — trust the coordinates.'
+    nav:'Navigate', gmaps:'Google Maps', apple:'Apple Maps', kit:'KIT campusplan', osm:'OpenStreetMap',
+    copy:'Copy coords', copied:'Copied ✓',
+    chipsTitle:'Quick Landmarks:',
+    found:   n => `Found ${n} result${n===1?'':'s'}`,
+    found20: n => `Found ${n} results (showing top 20 — narrow down search)`,
+    none:'No building found. Try just the number, e.g. 10.81',
+    empty:'Type a building number or hall name above.',
+    note:'<b>Tip:</b> One KIT building number can house multiple halls (e.g. 10.81 houses Emil-Mosonyi HS62, Friedrich-Engesser, and Theodor-Rehbock). They share the same physical building and entrance coordinates.',
+    live:    n => `● Live data: connected to kit.edu (${n} locations).`,
+    fallback:n => `○ Offline mode: using snapshot (${n} locations).`,
+    footer:'Data source: Official KIT campusplan database. All coordinates and locations are provided for campus navigation.'
+  },
+  zh: {
+    title:'KIT 楼号查找器',
+    sub:'输入楼号如 10.81、50.20，或讲堂名如 Audimax、Gerthsen。一键直接打开 Google 地图或 Apple 地图导航。',
+    ph:'搜楼号或讲堂名，例如 10.81 或 Gerthsen',
+    all:'全部', building:'楼', lecturehall:'讲堂', institute:'研究所', facility:'设施',
+    nav:'导航', gmaps:'Google 地图', apple:'Apple 地图', kit:'KIT campusplan', osm:'OpenStreetMap',
+    copy:'复制坐标', copied:'已复制 ✓',
+    chipsTitle:'常用校园地标：',
+    found:   n => `找到 ${n} 条结果`,
+    found20: n => `找到 ${n} 条结果（仅显示前 20 条，可输入更具体编号）`,
+    none:'未找到相关楼栋，试试只输楼号如 10.81',
+    empty:'请在上方输入楼号或讲堂名。',
+    note:'<b>说明：</b>一个 KIT 楼号内可能包含多个讲堂（例如 10.81 内有 Emil-Mosonyi HS62、Friedrich-Engesser、Theodor-Rehbock），均共享同一大楼与入口坐标。',
+    live:    n => `● 在线数据：已连接 kit.edu 实时库（共 ${n} 条数据）。`,
+    fallback:n => `○ 离线模式：使用内置快照（共 ${n} 条数据）。`,
+    footer:'数据来源：KIT 官方 campusplan 开放数据库。所有地理坐标仅用于校园导航指引。'
   }
 };
 
-// ─── State ────────────────────────────────────────────────────────────────
-let lang = 'zh';
+// ─── Default Language: English ─────────────────────────────────────────────
+let lang = 'en';
 try {
   const s = localStorage.getItem('kit-nav-lang');
   if (s === 'en' || s === 'zh') lang = s;
-  else if ((navigator.language || '').toLowerCase().startsWith('en')) lang = 'en';
 } catch(e) {}
 
 const T = () => I18N[lang];
 let catFilter = 'all';
 
-// ─── DOM refs ─────────────────────────────────────────────────────────────
-const qEl       = document.getElementById('q');
-const resEl     = document.getElementById('results');
-const cntEl     = document.getElementById('count');
-const chipsEl   = document.getElementById('chips');
-const filtersEl = document.getElementById('filters');
-const statusEl  = document.getElementById('status');
-const clearBtn  = document.getElementById('clear-btn');
+// ─── DOM References ────────────────────────────────────────────────────────
+const qEl          = document.getElementById('q');
+const resEl        = document.getElementById('results');
+const cntEl        = document.getElementById('count');
+const chipsEl      = document.getElementById('chips');
+const chipsSection = document.getElementById('chips-section');
+const chipsTitleEl = document.getElementById('chips-title');
+const filtersEl    = document.getElementById('filters');
+const statusEl     = document.getElementById('status');
+const clearBtn     = document.getElementById('clear-btn');
 
-// ─── Normalisation helpers ─────────────────────────────────────────────────
 function norm(s) {
   return (s || '').toLowerCase()
     .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
@@ -185,18 +295,22 @@ function kitId(title) {
   const m2 = title.match(/^(\d[\d.]+)/);    if (m2) return m2[1];
   return title;
 }
+function escHtml(s) {
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
 
-// ─── Build a result card (no inline onclick, uses data attributes) ────────
 function card(it, overrideTitle) {
-  const shown = overrideTitle || (lang === 'en' && it.id && EN_TITLES[it.id] ? EN_TITLES[it.id] : it.t);
-  const key   = kitId(it.t);
-  const nav   = `https://www.google.com/maps/dir/?api=1&destination=${it.lat},${it.lng}`;
-  const gmaps = `https://www.google.com/maps/search/?api=1&query=${it.lat},${it.lng}`;
-  const apple = `https://maps.apple.com/?daddr=${it.lat},${it.lng}`;
-  const kitUrl= `https://www.kit.edu/campusplan/map.php?id=${encodeURIComponent(key)}`;
-  const osm   = `https://www.openstreetmap.org/?mlat=${it.lat}&mlon=${it.lng}#map=18/${it.lat}/${it.lng}`;
-  const a     = addr[key] || it.addr || '';
-  const cat   = T()[it.c] || it.c;
+  const shown  = overrideTitle || (lang === 'en' && it.id && EN_TITLES[it.id] ? EN_TITLES[it.id] : it.t);
+  const key    = kitId(it.t);
+  const nav    = `https://www.google.com/maps/dir/?api=1&destination=${it.lat},${it.lng}`;
+  const gmaps  = `https://www.google.com/maps/search/?api=1&query=${it.lat},${it.lng}`;
+  const apple  = `https://maps.apple.com/?daddr=${it.lat},${it.lng}`;
+  const kitUrl = `https://www.kit.edu/campusplan/map.php?id=${encodeURIComponent(key)}`;
+  const osm    = `https://www.openstreetmap.org/?mlat=${it.lat}&mlon=${it.lng}#map=18/${it.lat}/${it.lng}`;
+  const a      = addr[key] || it.addr || '';
+  const cat    = T()[it.c] || it.c;
 
   const div = document.createElement('div');
   div.className = 'card';
@@ -216,13 +330,7 @@ function card(it, overrideTitle) {
   return div;
 }
 
-function escHtml(s) {
-  return String(s)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-}
-
-// ─── Copy-to-clipboard via delegation ────────────────────────────────────
+// ─── Event Delegation: Copy Button ─────────────────────────────────────────
 document.addEventListener('click', e => {
   const btn = e.target.closest('.copybtn');
   if (!btn) return;
@@ -231,12 +339,12 @@ document.addEventListener('click', e => {
     navigator.clipboard.writeText(`${lat}, ${lng}`).then(() => {
       btn.textContent = T().copied;
       btn.classList.add('ok');
-      setTimeout(() => { btn.textContent = T().copy; btn.classList.remove('ok'); }, 2000);
+      setTimeout(() => { btn.textContent = T().copy; btn.classList.remove('ok'); }, 1800);
     });
   }
 });
 
-// ─── Scoring ──────────────────────────────────────────────────────────────
+// ─── Search Scoring ────────────────────────────────────────────────────────
 function score(it, query) {
   const title = norm(it.t) + (it.id && EN_TITLES[it.id] ? ' ' + norm(EN_TITLES[it.id]) : '');
   const qn    = norm(query);
@@ -251,19 +359,22 @@ function score(it, query) {
   return 0;
 }
 
-// ─── Search & render ──────────────────────────────────────────────────────
 function doSearch() {
-  const s     = qEl.value.trim();
+  const s = qEl.value.trim();
   clearBtn.classList.toggle('visible', s.length > 0);
-  const pool  = data.filter(d => catFilter === 'all' || d.c === catFilter);
+
+  // KEY FIX: Instantly hide chips section when user is searching
+  if (s.length > 0) {
+    chipsSection.classList.add('hidden');
+  } else {
+    chipsSection.classList.remove('hidden');
+  }
+
+  const pool = data.filter(d => catFilter === 'all' || d.c === catFilter);
   resEl.innerHTML = '';
 
   if (!s) {
-    cntEl.textContent = T().empty;
-    freq.forEach(f => {
-      const note = lang === 'en' && f.note_en ? f.note_en : f.note;
-      resEl.appendChild(card({t: f.n, c: 'building', lat: f.lat, lng: f.lng}, f.n + ' — ' + note));
-    });
+    cntEl.textContent = '';
     return;
   }
 
@@ -280,21 +391,21 @@ function doSearch() {
   list.slice(0, 20).forEach(it => resEl.appendChild(card(it)));
 }
 
-// ─── Render chrome (language-dependent UI) ────────────────────────────────
 function renderChrome() {
   document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
-  document.getElementById('title').textContent  = T().title;
-  document.getElementById('sub').textContent    = T().sub;
-  document.getElementById('note').innerHTML     = T().note;
-  document.getElementById('footer').textContent = T().footer;
+  document.getElementById('title').textContent = T().title;
+  document.getElementById('sub').textContent   = T().sub;
+  document.getElementById('note').innerHTML    = T().note;
+  document.getElementById('footer').textContent= T().footer;
   qEl.placeholder = T().ph;
   document.getElementById('btn-zh').classList.toggle('on', lang === 'zh');
   document.getElementById('btn-en').classList.toggle('on', lang === 'en');
 
   statusEl.textContent = live ? T().live(liveCount) : T().fallback(data.length);
   statusEl.className   = 'status' + (live ? '' : ' offline');
+  chipsTitleEl.textContent = T().chipsTitle;
 
-  // Filter buttons
+  // Filter category buttons
   filtersEl.innerHTML = '';
   [['all',T().all],['building',T().building],['lecturehall',T().lecturehall],
    ['institute',T().institute],['facility',T().facility]].forEach(([v, label]) => {
@@ -305,19 +416,18 @@ function renderChrome() {
     filtersEl.appendChild(b);
   });
 
-  // Freq chips
+  // Landmark shortcuts (Universal only)
   chipsEl.innerHTML = '';
   freq.forEach(f => {
-    const note = lang === 'en' && f.note_en ? f.note_en : f.note;
+    const note = lang === 'en' ? f.note_en : f.note;
     const b = document.createElement('button');
     b.className = 'chip';
-    b.innerHTML = `<b>${escHtml(f.n)}</b> <small>${escHtml(note)}</small>`;
+    b.innerHTML = `<strong>${escHtml(f.n)}</strong> <small>${escHtml(note)}</small>`;
     b.onclick = () => { qEl.value = f.n; doSearch(); };
     chipsEl.appendChild(b);
   });
 }
 
-// ─── Lang switch ──────────────────────────────────────────────────────────
 function setLang(l) {
   lang = l;
   try { localStorage.setItem('kit-nav-lang', l); } catch(e) {}
@@ -327,11 +437,10 @@ function setLang(l) {
 document.getElementById('btn-zh').onclick = () => setLang('zh');
 document.getElementById('btn-en').onclick = () => setLang('en');
 
-// ─── Search input wiring ──────────────────────────────────────────────────
 qEl.addEventListener('input', doSearch);
 clearBtn.addEventListener('click', () => { qEl.value = ''; qEl.focus(); doSearch(); });
 
-// ─── Live data fetch ──────────────────────────────────────────────────────
+// ─── Live Data Loading ─────────────────────────────────────────────────────
 function parseKitJS(text) {
   const m = text.match(/var cp_repository_data\s*=\s*(\[.*\]);?\s*$/s);
   if (!m) throw new Error('parse failed');
@@ -362,7 +471,6 @@ async function fetchLive() {
   doSearch();
 }
 
-// ─── Boot ─────────────────────────────────────────────────────────────────
 renderChrome();
 doSearch();
 fetchLive();

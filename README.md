@@ -57,3 +57,4 @@ Found a building with wrong coordinates? Open an issue or PR. The embedded snaps
 ---
 
 Made for students at KIT who can never find building `10.81` on Google Maps.
+
