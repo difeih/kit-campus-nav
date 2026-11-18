@@ -182,6 +182,10 @@ footer{
   font-size:12px;color:var(--text-muted);line-height:1.6;
   margin-top:18px;padding-top:12px;border-top:1px solid var(--border-light);
 }
+.credit{
+  margin-top:4px;font-weight:600;color:var(--text-main);display:flex;align-items:center;gap:4px;
+}
+.credit span{color:var(--kit-brand)}
 </style>
 </head>
 <body>
@@ -249,7 +253,7 @@ const I18N = {
     note:'<b>Tip:</b> One KIT building number can house multiple halls (e.g. 10.81 houses Emil-Mosonyi HS62, Friedrich-Engesser, and Theodor-Rehbock). They share the same physical building and entrance coordinates.',
     live:    n => `● Live data: connected to kit.edu (${n} locations).`,
     fallback:n => `○ Offline mode: using snapshot (${n} locations).`,
-    footer:'Data source: Official KIT campusplan database. All coordinates and locations are provided for campus navigation.'
+    footer:'Data source: Official KIT campusplan database. All coordinates and locations are provided for campus navigation.<div class="credit">Made with ❤️ by <span>Difei</span> · Free & Open for KIT Students</div>'
   },
   zh: {
     title:'KIT 楼号查找器',
@@ -266,7 +270,7 @@ const I18N = {
     note:'<b>说明：</b>一个 KIT 楼号内可能包含多个讲堂（例如 10.81 内有 Emil-Mosonyi HS62、Friedrich-Engesser、Theodor-Rehbock），均共享同一大楼与入口坐标。',
     live:    n => `● 在线数据：已连接 kit.edu 实时库（共 ${n} 条数据）。`,
     fallback:n => `○ 离线模式：使用内置快照（共 ${n} 条数据）。`,
-    footer:'数据来源：KIT 官方 campusplan 开放数据库。所有地理坐标仅用于校园导航指引。'
+    footer:'数据来源：KIT 官方 campusplan 开放数据库。所有地理坐标仅用于校园导航指引。<div class="credit">Made with ❤️ by <span>Difei</span> · 免费开放给所有 KIT 同学</div>'
   }
 };
 
@@ -409,7 +413,7 @@ function renderChrome() {
   document.getElementById('title').textContent = T().title;
   document.getElementById('sub').textContent   = T().sub;
   document.getElementById('note').innerHTML    = T().note;
-  document.getElementById('footer').textContent= T().footer;
+  document.getElementById('footer').innerHTML  = T().footer;
   qEl.placeholder = T().ph;
   document.getElementById('btn-zh').classList.toggle('on', lang === 'zh');
   document.getElementById('btn-en').classList.toggle('on', lang === 'en');
