@@ -1,6 +1,6 @@
 # KIT Campus Navigator / KIT 楼号查找器
 
-**Live site:** https://defei-wang.github.io/kit-campus-nav/
+**Live site:** https://difeih.github.io/kit-campus-nav/
 
 A fast, offline-capable single-page tool for finding KIT (Karlsruhe Institute of Technology) buildings by their internal numbering system (e.g. `10.81`, `50.20`) and opening Google Maps / Apple Maps navigation directly.
 
